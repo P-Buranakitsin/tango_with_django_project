@@ -21,6 +21,8 @@ from django.contrib.auth import logout
 
 from datetime import datetime
 
+from rango.bing_search import run_query
+
 # Create your views here.
 
 
@@ -282,3 +284,16 @@ def get_server_side_cookie(request, cookie, default_val=None):
     if not val:
         val = default_val
     return val
+
+def search(request):
+    result_list = []
+    context_dict={}
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+        if query:
+            # Run our Bing function to get the results list!
+            result_list = run_query(query)
+            context_dict['result_list'] = result_list
+            context_dict['query'] = query
+        
+    return render(request, 'rango/search.html', context=context_dict)
