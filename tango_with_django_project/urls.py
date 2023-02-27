@@ -28,7 +28,7 @@ class MyRegistrationView(RegistrationView):
         return reverse('rango:register_profile')
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.IndexView.as_view(), name='index'),
     path('rango/', include('rango.urls')),
     # The above maps any URLs starting with rango/ to be handled by rango.
     path('admin/', admin.site.urls),
