@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
@@ -12,6 +13,9 @@ class Category(models.Model):
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
+        if self.views < 0:
+            self.views = 0
+
         self.slug = slugify(self.name)
         super(Category, self).save(*args, **kwargs)
     class Meta:
@@ -29,6 +33,12 @@ class Page(models.Model):
     title = models.CharField(max_length=128)
     url = models.URLField()
     views = models.IntegerField(default=0)
+    last_visit = models.DateTimeField(blank=True)
+
+    def save(self, *args, **kwargs):
+        self.last_visit = timezone.now()
+        super(Page, self).save(*args, **kwargs)
+
     def __str__(self):
         return self.title
 
